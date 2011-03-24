@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Copyright (C) 2011 Mikhail Wolfson <wolfsonm@mit.edu>
+#
+# This file is part of TemplateSim.
+#  
+# TemplateSim is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# TemplateSim is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+#
+# Clean job: removes that job directory and deletes it from the db-file
+
+DB_FILE='jobs.db'
+
+for jx in $@; do
+	echo "Resubmitting $jx"
+	cd $jx
+	jobnum=$(qsub $jx.job)
+	jobnum=${jobnum%%.lymphocyteone.mit.edu}
+	echo $jobnum
+	cd -
+
+	sed -i.bak "/$jx/s/,[[:digit:]]\+\r/,$jobnum/" $DB_FILE
+    rm -f $DB_FILE.bak
+done
+
