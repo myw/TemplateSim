@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 
-## Copyright (C) 2011 Mikhail Wolfson <wolfsonm@mit.edu>
-##
-## This file is part of TemplateSim.
-##
-## TemplateSim is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 2 of the License, or
-## (at your option) any later version.
-## 
-## TemplateSim is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-## 
-## You should have received a copy of the GNU General Public License
-## along with this program; if not, write to the Free Software 
-## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-
+# Copyright (C) 2011 Mikhail Wolfson <wolfsonm@mit.edu>
 #
-# make_job.py -- Use a template directory and an options file to construct
-#                a specific set of parameters for a simulation.
+# This file is part of TemplateSim.
+#
+# TemplateSim is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# TemplateSim is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software 
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+## make_job.py 
+# _Use a template directory and an options file to construct
+# a specific set of parameters for a simulation._
 
 
 from __future__ import with_statement
@@ -41,20 +41,24 @@ from subprocess import PIPE
 from ConfigParser import SafeConfigParser
 from optparse import OptionParser
 
+# Setup basic logging at the DEBUG level
 logging.basicConfig(level = logging.DEBUG, stream = sys.stderr)
 
-# Multiline manipulation function factory
+# Multiline manipulation function factory.
 def make_multiline_manip(prefix, joiner, condition = lambda line: True):
     """Create multi-line manipulators with appropriate prefixes and joiners.
 
     Returns a closure of a function. Condition parameter defaults to always
     picking lines, but can be replaced with a function that only picks select
     lines"""
+
     def manip(str):
         """Manipulate a multi-line string.
 
-        Parse a string by lines, comment each out in front with a hash, and
-        rejoin."""
+        Parse a string by lines, ignore those for which <condition> is not met,
+        place <prefix> in front of each, and rejoin, using <joiner> as the link
+        string."""
+
         return joiner.join([prefix + line for line in str.split('\n')
             if condition(line)])
 
@@ -78,11 +82,13 @@ def config_to_string(cp):
 
 def make_link(src, dest):
     """Log making a symlink."""
+
     logging.info("[symlink] %s -> %s", dest, src)
     os.symlink(src, dest)
 
 def copy_file(src, dest):
     """Log copying a file."""
+
     logging.info("[copy] %s -> %s", src, dest)
     shutil.copy(src, dest)
 
