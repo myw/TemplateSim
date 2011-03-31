@@ -117,18 +117,13 @@ def setup_directory(prefix):
     os.makedirs(dirname)
     return dirname
 
-def copy_static_files(config, template, destdir):
-    """Just copy over a set of files form the template to the job directory.
+def copy_static_files(template, destdir):
+    """Just copy all files form the 'static' subdir of template to the job directory.
     
     Files are unchanged as much as possible, and their permissions and stats are
     kept unchanged."""
 
-    static_files = ["nanzscore.m",        
-                    "run_ga_script.m",    
-                    "test_subset_model.m"];
-
-    for sf in static_files:
-        src = os.path.join(template, sf)
+    for sf in iglob(os.path.join(template, "static"):
         dest = os.path.join(destdir, os.path.basename(sf))
         copy_file(src, dest)
 
@@ -256,8 +251,7 @@ def make_job(cp, opts):
     logging.info("[config] %s\n%s", config_file, config_text)
 
     dirname = setup_directory(opts.prefix)
-    copy_static_files(config = config_file,
-                      template = opts.template_dir,
+    copy_static_files(template = opts.template_dir,
                       destdir = dirname)
 
     # Write individual config file to destination directory
