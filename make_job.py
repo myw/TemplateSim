@@ -129,8 +129,8 @@ def copy_static_files(template, destdir):
     Files are unchanged as much as possible, and their permissions and stats are
     kept unchanged."""
 
-    for sf in iglob(os.path.join(template, "static"):
-        dest = os.path.join(destdir, os.path.basename(sf))
+    for src in iglob(os.path.join(template, "static", "*")):
+        dest = os.path.join(destdir, os.path.basename(src))
         copy_file(src, dest)
 
 def copy_datafile(datafile, template, destdir):
